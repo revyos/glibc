@@ -156,7 +156,7 @@ ENTRY (memcpy)
 END (memcpy)
 
 libc_hidden_builtin_def (memcpy)
-.weak memcpy
+.weak HIDDEN_JUMPTARGET (memcpy)
 
 ENTRY (memmove)
 #if defined(__riscv_vector)

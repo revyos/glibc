@@ -73,16 +73,16 @@ ENTRY (memcpy)
 
 .L_len_larger_16bytes:
 #if defined(__riscv_xtheadc)
-	ldd	a4, a5, 0(a1)
-	sdd	a4, a5, 0(a0)
-	ldd	a6, a7, 16(a1)
-	sdd	a6, a7, 16(a0)
-	ldd	a4, a5, 32(a1)
-	sdd	a4, a5, 32(a0)
-	ldd	a6, a7, 48(a1)
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 3, 4
 	sub	t4, t4, t3
         addi    a1, a1, 64
-	sdd	a6, a7, 48(a0)
+	th.sdd	a6, a7, (a0), 3, 4
 #else
         ld      a4, 0(a1)
         sd      a4, 0(a0)
@@ -214,15 +214,15 @@ ENTRY (memmove)
 	sub	a1, a1, t1
 	sub	a0, a0, t1
 #if defined(__riscv_xtheadc)
-	ldd	a6, a7, 48(a1)
+	th.ldd	a6, a7, (a1), 3, 4
 	sub	t4, t4, t3
-	sdd	a6, a7, 48(a0)
-	ldd	a4, a5, 32(a1)
-	sdd	a4, a5, 32(a0)
-	ldd	a6, a7, 16(a1)
-	sdd	a6, a7, 16(a0)
-	ldd	a4, a5, 0(a1)
-	sdd	a4, a5, 0(a0)
+	th.sdd	a6, a7, (a0), 3, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
 #else
         ld      a7, 56(a1)
         sd      a7, 56(a0)

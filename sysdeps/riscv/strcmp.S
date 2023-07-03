@@ -45,7 +45,7 @@ ENTRY(strcmp)
     REG_L a3, \i*SZREG(a1)
 
 #if defined(__riscv_xtheadc)
-    tstnbz t0, a2
+    th.tstnbz t0, a2
     xor   t1, a2, a3
     or    t2, t0, t1
 #else
@@ -108,8 +108,8 @@ ENTRY(strcmp)
 
 .Lmismatch:
 #if defined(__riscv_xtheadc)
-  rev    t1, t2
-  ff1    t0, t1
+  th.rev    t1, t2
+  th.ff1    t0, t1
   andi   t0, t0, 0xf8
   srl t1, a2, t0
   andi t1, t1, 0xff

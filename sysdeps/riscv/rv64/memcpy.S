@@ -76,24 +76,24 @@ ENTRY (memcpy)
 .L_len_larger_128bytes_loop:
 	addi	t4, t4, -1
 #if defined(__riscv_xtheadc)
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
-	th.ldd	a6, a7, 16(a1)
-	th.sdd	a6, a7, 16(a0)
-	th.ldd	a4, a5, 32(a1)
-	th.sdd	a4, a5, 32(a0)
-	th.ldd	a6, a7, 48(a1)
-	th.sdd	a6, a7, 48(a0)
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 3, 4
+	th.sdd	a6, a7, (a0), 3, 4
 	addi    a1, a1, 64
 	addi    a0, a0, 64
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
-	th.ldd	a6, a7, 16(a1)
-	th.sdd	a6, a7, 16(a0)
-	th.ldd	a4, a5, 32(a1)
-	th.sdd	a4, a5, 32(a0)
-	th.ldd	a6, a7, 48(a1)
-	th.sdd	a6, a7, 48(a0)
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 3, 4
+	th.sdd	a6, a7, (a0), 3, 4
 	addi    a1, a1, 64
 	addi    a0, a0, 64
 #else
@@ -140,14 +140,14 @@ ENTRY (memcpy)
 	beqz     t4, .L_len_less_64bytes
 	andi    a2, a2, 63
 #if defined(__riscv_xtheadc)
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
-	th.ldd	a6, a7, 16(a1)
-	th.sdd	a6, a7, 16(a0)
-	th.ldd	a4, a5, 32(a1)
-	th.sdd	a4, a5, 32(a0)
-	th.ldd	a6, a7, 48(a1)
-	th.sdd	a6, a7, 48(a0)
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 3, 4
+	th.sdd	a6, a7, (a0), 3, 4
 #else
 	ld      a4, 0(a1)
 	sd      a4, 0(a0)
@@ -178,8 +178,8 @@ ENTRY (memcpy)
 .L_len_less_64bytes_loop:
 	addi	t4, t4, -1
 #if defined(__riscv_xtheadc)
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
 #else
 	ld      a4, 0(a1)
 	sd      a4, 0(a0)
@@ -196,13 +196,13 @@ ENTRY (memcpy)
 	beqz     t4, .L_len_less_8bytes
 	andi    a2, a2, 7
 #if defined(__riscv_xtheadc)
-	ldia	a4, (a1), 8, 0
-	sdia	a4, (a0), 8, 0
+	th.ldia	a4, (a1), 8, 0
+	th.sdia	a4, (a0), 8, 0
 #else
 	ld      a4, 0(a1)
 	addi    a1, a1, 8
 	sd      a4, 0(a0)
-	addi    a0, a0, 8
+	addi    a0, a0, 48
 #endif
 
 /* [4, 8). */
@@ -211,8 +211,8 @@ ENTRY (memcpy)
 	beqz     t4, .L_copy_by_byte
 	andi    a2, a2, 3
 #if defined(__riscv_xtheadc)
-	lwia	a4, (a1), 4, 0
-	swia	a4, (a0), 4, 0
+	th.lwia	a4, (a1), 4, 0
+	th.swia	a4, (a0), 4, 0
 #else
 	lw      a4, 0(a1)
 	addi    a1, a1, 4
@@ -227,8 +227,8 @@ ENTRY (memcpy)
 .L_copy_by_byte_loop:
 	addi	a2, a2, -1
 #if defined(__riscv_xtheadc)
-	lbia	a4, (a1), 1, 0
-	sbia	a4, (a0), 1, 0
+	th.lbia	a4, (a1), 1, 0
+	th.sbia	a4, (a0), 1, 0
 #else
 	lb     a4, 0(a1)
 	addi    a1, a1, 1
@@ -250,8 +250,8 @@ ENTRY (memcpy)
 	/* Makes the dest align.  */
 	addi	a3, a3, -1
 #if defined(__riscv_xtheadc)
-	lbia	a4, (a1), 1, 0
-	sbia	a4, (a0), 1, 0
+	th.lbia	a4, (a1), 1, 0
+	th.sbia	a4, (a0), 1, 0
 #else
 	lb     a4, 0(a1)
 	addi    a1, a1, 1
@@ -324,24 +324,24 @@ ENTRY (memmove)
 #if defined(__riscv_xtheadc)
 	addi	a1, a1, -64
 	addi	a0, a0, -64
-	th.ldd	a6, a7, 48(a1)
-	th.sdd	a6, a7, 48(a0)
-	th.ldd	a4, a5, 32(a1)
-	th.sdd	a4, a5, 32(a0)
-	th.ldd	a6, a7, 16(a1)
-	th.sdd	a6, a7, 16(a0)
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
+	th.ldd	a6, a7, (a1), 3, 4
+	th.sdd	a6, a7, (a0), 3, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
 	addi	a1, a1, -64
 	addi	a0, a0, -64
-	th.ldd	a6, a7, 48(a1)
-	th.sdd	a6, a7, 48(a0)
-	th.ldd	a4, a5, 32(a1)
-	th.sdd	a4, a5, 32(a0)
-	th.ldd	a6, a7, 16(a1)
-	th.sdd	a6, a7, 16(a0)
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
+	th.ldd	a6, a7, (a1), 3, 4
+	th.sdd	a6, a7, (a0), 3, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
 #else
 	addi	a1, a1, -128
 	addi	a0, a0, -128
@@ -388,14 +388,14 @@ ENTRY (memmove)
 	addi	a1, a1, -64
 	addi	a0, a0, -64
 #if defined(__riscv_xtheadc)
-	th.ldd	a6, a7, 48(a1)
-	th.sdd	a6, a7, 48(a0)
-	th.ldd	a4, a5, 32(a1)
-	th.sdd	a4, a5, 32(a0)
-	th.ldd	a6, a7, 16(a1)
-	th.sdd	a6, a7, 16(a0)
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
+	th.ldd	a6, a7, (a1), 3, 4
+	th.sdd	a6, a7, (a0), 3, 4
+	th.ldd	a4, a5, (a1), 2, 4
+	th.sdd	a4, a5, (a0), 2, 4
+	th.ldd	a6, a7, (a1), 1, 4
+	th.sdd	a6, a7, (a0), 1, 4
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
 #else
 	ld      a7, 56(a1)
 	sd      a7, 56(a0)
@@ -425,8 +425,8 @@ ENTRY (memmove)
 	addi	a1, a1, -16
 	addi	a0, a0, -16
 #if defined(__riscv_xtheadc)
-	th.ldd	a4, a5, 0(a1)
-	th.sdd	a4, a5, 0(a0)
+	th.ldd	a4, a5, (a1), 0, 4
+	th.sdd	a4, a5, (a0), 0, 4
 #else
 	ld      a4, 8(a1)
 	sd      a4, 8(a0)
@@ -441,8 +441,8 @@ ENTRY (memmove)
 	beqz     t4, .L_len_less_8bytes_m
 	andi    a2, a2, 7
 #if defined(__riscv_xtheadc)
-	ldib	a4, (a1), -8, 0
-	sdib	a4, (a0), -8, 0
+	th.ldib	a4, (a1), -8, 0
+	th.sdib	a4, (a0), -8, 0
 #else
 	addi	a1, a1, -8
 	addi	a0, a0, -8
@@ -456,8 +456,8 @@ ENTRY (memmove)
 	beqz     t4, .L_copy_by_byte_m
 	andi    a2, a2, 3
 #if defined(__riscv_xtheadc)
-	lwib	a4, (a1), -4, 0
-	swib	a4, (a0), -4, 0
+	th.lwib	a4, (a1), -4, 0
+	th.swib	a4, (a0), -4, 0
 #else
 	addi	a1, a1, -4
 	addi	a0, a0, -4
@@ -472,8 +472,8 @@ ENTRY (memmove)
 .L_copy_by_byte_loop_m:
 	addi     t4, t4, -1
 #if defined(__riscv_xtheadc)
-	lbib	a3, (a1), -1, 0
-	sbib	a3, (a0), -1, 0
+	th.lbib	a3, (a1), -1, 0
+	th.sbib	a3, (a0), -1, 0
 #else
 	addi	a1, a1, -1
 	addi	a0, a0, -1
@@ -494,8 +494,8 @@ ENTRY (memmove)
 	addi     t5, t5, -1
 	/* Makes the dest align.  */
 #if defined(__riscv_xtheadc)
-	lbib	a3, (a1), -1, 0
-	sbib	a3, (a0), -1, 0
+	th.lbib	a3, (a1), -1, 0
+	th.sbib	a3, (a0), -1, 0
 #else
 	addi	a1, a1, -1
 	addi	a0, a0, -1
